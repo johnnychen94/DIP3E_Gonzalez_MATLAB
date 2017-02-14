@@ -1,28 +1,28 @@
-function [Xoutput,Youtput] = nearest_pixel(inputpixel,ori_size,des_size)
+function [Xout,Yout] = nearest_pixel(inputpixel,input_size,output_size)
 % % % Nearest_element may find out the nearest pixel (Xoutput,Youtput) of the original image, given the pixel (Xinput,Yinput) of destination image, and the sizes of both image.
-% % % This function mainly used for assign values of original image to destination image, i.e., g(Xinput,Yinput)=f(Xoutput,Youtput)
-% % % This function works by comparing the eculid distances.
 
-%%% FIXME:THIS FUNCTION WORKS EXTREMELY SLOWLY NOW!!!
 
-x = inputpixel(1)*ori_size(1)/des_size(1);
-y = inputpixel(2)*ori_size(2)/des_size(2);
-% get the positions of the neighbor pixels.
-TL = [floor(x),floor(y)];
-TR = [floor(x),ceil(y)];
-BL = [ceil(x),floor(y)];
-BR = [ceil(x),ceil(y)];
-pixels = [TL;TR;BL;BR];
+x = inputpixel(1)*output_size(1)/input_size(1);
+y = inputpixel(2)*output_size(2)/input_size(2);
 
-% calulate the squre of eculid distance.
-distance = zeros(1,4);
-for i = 1:4
-    distance(i) = sum((pixels(i,:)-inputpixel).*(pixels(i,:)-inputpixel));
+x0 = x-floor(x);
+y0 = y-floor(y);
+% using block distance to give the nearest pixel
+if x0<=0.5
+    if y0<=0.5
+        outputpixel = [floor(x),floor(y)];
+    else
+        outputpixel = [floor(x),ceil(y)];
+    end
+else
+    if y0<=0.5
+        outputpixel = [ceil(x),floor(y)];
+    else
+        outputpixel = [ceil(x),ceil(y)];
+    end
 end
 
-[~,minindex] = min(distance);
-Xoutput = pixels(minindex,1);
-Youtput = pixels(minindex,2);
-
+Xout = outputpixel(1);
+Yout = outputpixel(2);
 end
 
