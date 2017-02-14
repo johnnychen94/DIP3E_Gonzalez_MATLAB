@@ -14,10 +14,10 @@
 
 % % global variables
 INPUTFILENAME = 'dpi_72_original.png';
-ORIGINAL_DATA = double(imread(INPUTFILENAME))./255;
+ORIGINAL_DATA = imread(INPUTFILENAME);
 
 OUTPUTSIZE = [3692,2812];   % when this script becomes function, these should be input parameters.
-INPUTSIZE = size(ORIGINAL_DATA);
+INPUTSIZE = size(original_data);
 
 
 
@@ -28,30 +28,31 @@ dpi_72_NNI_data = zeros(OUTPUTSIZE);
 
 % % Nearest neighbor interpolation
 % TODO: check if this nested loop can be replaced for better performance
-for i = 1:OUTPUTSIZE(1)
-    for j = 1:OUTPUTSIZE(2)
+for i = 1:Xsize
+    for j = 1:Ysize
         
-        % get the nearest pixel of (i,j) in the input image
+        % get the nearest
         [x0,y0] = nearest_pixel([i,j],OUTPUTSIZE,INPUTSIZE); % noting the output image are corresponding input parameters in nearest_pixel.
     
-        % deal with border situation
+        
+        % deal with border situations
         % TODO: use logical operation to shorten this if-end-if loop
-        if x0==0 
-            x0=x0+1;
+        if h==0 
+            h=h+1;
         end
-        if y0==0
-            y0=y0+1;
+        if k==0
+            k=k+1;
         end     
-        if x0>OUTPUTSIZE(1)
-            x0 = x0-1;
+        if h>Xsize
+            h = h-1;
         end
-        if y0>OUTPUTSIZE(2)
-            y0 = y0-1;
+        if k>Ysize
+            k = k-1;
         end
         
         % assign values
         dpi_72_NNI_data(i,j) = ...
-            ORIGINAL_DATA(x0,y0);
+            dpi_72_original_data(h,k);
     end
 end
 
@@ -59,19 +60,27 @@ end
 
 % % Bilinear interpolation
 % TODO: check if this nested loop can be replaced for better performance
-%for i = 1:OUTPUTSIZE(1)
-%    for j = 1:OUTPUTSIZE(2)
-%        % TODO: 
-%    end
-%end
+for i = 1:Xsize
+    for j = 1:Ysize
+        % TODO: 
+    end
+end
 
 
+
+% % pre-show processing
+dpi_72_original_data = double(dpi_72_original_data)./255;
+dpi_72_NNI_data = double(dpi_72_NNI_data)./255;
 
 % % show image
-imshow(dpi_72_NNI_data);
+%subplot(2,4,1),imshow(dpi_72_original_data);
+%subplot(2,4,2),imshow(dpi_72_NNI_data);
+%subplot(2,4,5),imshow(dpi_150_NNI_data);
 
 % % save image
+imwrite(dpi_72_original_data,'dpi_72_original.png');
 imwrite(dpi_72_NNI_data,'dpi_72_NNI.png');
+imwrite(dpi_150_original_data,'dpi_150_original.png');
 
 
 
