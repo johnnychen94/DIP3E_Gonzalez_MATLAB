@@ -6,72 +6,78 @@
 % % % Nearest neighbor interpolation assign the value of the 'nearest' pixel to new pixels.
 % % % It is simple but might produce undesirable artifacts, such as severe distortion of straight edges.
 % % % 
-% % % Bilinear interpolation (TODO: more description)
+% % % Bilinear interpolation
 % % %
 % % %
-% % % Bicubic interpolation (TODO: more description)
-
-
-% % global variables
-INPUTFILENAME = 'dpi_72_original.png';
-ORIGINAL_DATA = double(imread(INPUTFILENAME))./255;
-
-OUTPUTSIZE = [3692,2812];   % when this script becomes function, these should be input parameters.
-INPUTSIZE = size(ORIGINAL_DATA);
+% % % Bicubic interpolation
 
 
 
-% % create output array
-dpi_72_NNI_data = zeros(OUTPUTSIZE);
+
+% % read image, size of 3692*2812, dpi of 1250.
+filename = 'original_image.tif';
+original_data = imread(filename);
+[Xsize,Ysize] = size(original_data);
+
+% % reduce image to 72dpi and 150dpi
+% % using built-in imresize()
+dpi_72_original_data = imresize(original_data,72/1250);
+dpi_150_original_data = imresize(original_data,150/1250);
+
+% % apply nearest neighbor interpolation to 72dpi and 150dpi
+dpi_72_NNI_data = zeros([Xsize,Ysize]);
+dpi_150_NNI_data = zeros([Xsize,Ysize]);
 
 
 
 % % Nearest neighbor interpolation
-% TODO: check if this nested loop can be replaced for better performance
-for i = 1:OUTPUTSIZE(1)
-    for j = 1:OUTPUTSIZE(2)
+% FIXME: check if this nested loop can be replaced for better performance
+% TODO: This loop doesn't work as expected!
+for i = 1:Xsize
+    for j = 1:Ysize
         
-        % get the nearest pixel of (i,j) in the input image
-        [x0,y0] = nearest_pixel([i,j],OUTPUTSIZE,INPUTSIZE); % noting the output image are corresponding input parameters in nearest_pixel.
-    
-        % deal with border situation
-        % TODO: use logical operation to shorten this if-end-if loop
-        if x0==0 
-            x0=x0+1;
+        %[h,k] = nearest_element([i,j],size(dpi_72_original_data),size(dpi_72_NNI_data)); % using eculid distance to get the literally nearest pixel.
+        h = round(i*72/1250);
+        k = round(j*72/1250);
+        
+        % deal with border situations
+        if h==0 
+            h=h+1;
         end
-        if y0==0
-            y0=y0+1;
+        if k==0
+            k=k+1;
         end     
-        if x0>OUTPUTSIZE(1)
-            x0 = x0-1;
+        if h>Xsize
+            h = h-1;
         end
-        if y0>OUTPUTSIZE(2)
-            y0 = y0-1;
+        if k>Ysize
+            k = k-1;
         end
-        
         % assign values
         dpi_72_NNI_data(i,j) = ...
-            ORIGINAL_DATA(x0,y0);
+            dpi_72_original_data(h,k);
     end
 end
 
 
 
 % % Bilinear interpolation
-% TODO: check if this nested loop can be replaced for better performance
-%for i = 1:OUTPUTSIZE(1)
-%    for j = 1:OUTPUTSIZE(2)
-%        % TODO: 
-%    end
-%end
+
+for i = 1:Xsize
+    for j = 1:Ysize
+        % TODO: 
+    end
+end
+
+
 
 
 
 % % show image
-imshow(dpi_72_NNI_data);
+% subplot(2,4,1),imshow(dpi_72_original_data,'DisplayRange',[0,255]);
+% subplot(2,4,2),imshow(dpi_72_NNI_data,'DisplayRange',[0,255]);
+% subplot(2,4,5),imshow(dpi_150_NNI_data,'DisplayRange',[0,255]);
 
-% % save image
-imwrite(dpi_72_NNI_data,'dpi_72_NNI.png');
 
 
 
