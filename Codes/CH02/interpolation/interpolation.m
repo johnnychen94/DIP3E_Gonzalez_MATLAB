@@ -35,6 +35,3 @@ imwrite(dpi_72_BI_data,strcat('dpi_',int2str(DPI),'_BI.png'));
 
 
 
-
-
-
