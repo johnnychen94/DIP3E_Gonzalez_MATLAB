@@ -32,6 +32,9 @@ subplot(1,2,2),imshow(dpi_72_BI_data);
 imwrite(dpi_72_BI_data,strcat('dpi_',int2str(DPI),'_BI.png'));
 
 
+%dpi_72_imresize_data=imresize(ORIGINAL_DATA,OUTPUTSIZE,'bilinear');
+%imwrite(dpi_72_imresize_data,strcat('dpi_',int2str(DPI),'_imresize.png'));
+
 
 
 
