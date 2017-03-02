@@ -41,12 +41,13 @@ Y_inverse_pixel_int(Y_inverse_pixel_int==0) = 1;
 % output_image_data = sum(co.*va,3);
 
 
-% claculate coefficients and values
+% calculate coefficients and values
 [temp_x,temp_y] = meshgrid(Y_offset,X_offset);
 co(:,:,1) = temp_x;
 co(:,:,2) = temp_y;
 co(:,:,3) = temp_x.*temp_y;
 co(:,:,4) = ones(des_size);
+
 
 CC = double(image_data(X_inverse_pixel_int,Y_inverse_pixel_int));
 BC = double(image_data(X_inverse_pixel_int,Y_inverse_pixel_int));
