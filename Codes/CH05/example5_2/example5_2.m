@@ -7,7 +7,7 @@
 %   3. exp(denoised_image);
 
 % On Harmonic mean filter and Contraharmonic mean filter:
-%  At present I haven't figured out a linear(convolution) method to apply
+%  At present I have not figured out a linear(convolution) method to apply
 %  these two filters. So an iteration method using double for-loop would be
 %  used in this example, as we might see, the processing time is quite long.
 
@@ -34,11 +34,11 @@ geo_denoised_cktb = exp(conv2(log(1+gauss_cktb),geo_mask,'same'))-1;
     % constant 1 is used to regularize the image
 
 % design the lehmer mean filter (nonlinear)
-lehmer_mean = @(x,p) sum((0.01+x).^p)/sum((0.01+x).^(p-1));
+lehmer_mean = @(mask,p) sum((0.01+mask).^p)/sum((0.01+mask).^(p-1));
     % constant 0.01 is for regularization
 P = 1.5; % a parameter for generating concrete masks.
-contra_mask = @(x) lehmer_mean(x,1+P); 
-harm_mask = @(x) lehmer_mean(x,1-P);
+contra_mask = @(mask) lehmer_mean(mask,1+P); 
+harm_mask = @(mask) lehmer_mean(mask,1-P);
 
 % denoising with lehmer mean filter for figure 5.8
 contra_pepper_cktb = ...
